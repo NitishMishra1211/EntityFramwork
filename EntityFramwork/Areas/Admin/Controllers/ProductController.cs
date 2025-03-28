@@ -25,6 +25,12 @@ namespace EntityFramwork.Areas.Admin.Controllers
         public IActionResult Upsert(int? id)
         {
             Product product = new Product();
+            IEnumerable<SelectListItem> CategoryDropDown = _unitOfWork.Category.GetAll().Select(i => new SelectListItem
+            {
+                Text = i.Name,
+                Value = i.Id.ToString()
+            });
+            ViewBag.CategoryDropDown = CategoryDropDown;
             if (id == null)
             {
                 //this is for create
@@ -32,6 +38,7 @@ namespace EntityFramwork.Areas.Admin.Controllers
             }
             //this is for edit
             product = _unitOfWork.Product.Get(u => u.Id == id);
+            
             if (product == null)
             {
                 return NotFound();
@@ -48,12 +55,12 @@ namespace EntityFramwork.Areas.Admin.Controllers
 
                 string productPath = Path.Combine(webRootPath, @"images\product");
 
-                //if(!Directory.Exists(productPath))
-                //{
-                //    Directory.CreateDirectory(productPath);
-                //}
+                if (!Directory.Exists(productPath))
+                {
+                    Directory.CreateDirectory(productPath);
+                }
 
-                if(!string.IsNullOrEmpty(obj.ImageUrl))
+                if (!string.IsNullOrEmpty(obj.ImageUrl))
                 {
                     string upload = Path.Combine(productPath, file.FileName);
                     using (var fileStream = new FileStream(upload, FileMode.Create))

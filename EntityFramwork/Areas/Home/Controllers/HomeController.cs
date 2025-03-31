@@ -17,5 +17,19 @@ namespace EntityFramwork.Areas.Home.Controllers
             return View(productList);
            
         }
+
+        public IActionResult Detail(int productId)
+        {
+            var product = _unitOfWork.Product.Get(u => u.Id == productId, includeProperties: "Category");
+
+            // Check if the product is found
+            if (product == null)
+            {
+                return NotFound(); // or redirect to an error page
+            }
+
+            return View(product);
+        }
+
     }
 }

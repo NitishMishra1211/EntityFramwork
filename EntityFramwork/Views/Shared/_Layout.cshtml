@@ -36,9 +36,11 @@
                                 <li><a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Product</a></li>
                                 <li><a class="dropdown-item" asp-area="Admin" asp-controller="Student" asp-action="Index">Student</a></li>
                             </ul>
+                            
                         </div>
+                        @await Html.PartialAsync("_CartSummary")
                     </ul>
-              
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>

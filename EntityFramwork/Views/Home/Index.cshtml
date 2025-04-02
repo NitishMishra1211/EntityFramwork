@@ -6,7 +6,7 @@
         <div class="col-lg-3 col-sm-6">
             <div class="row p-2">
                 <div class="col-12 p-1">
-                    <div class="card border-0 p-3 shadow  border-top border-5 rounded">
+                    <div class="card border-0 p-3 shadow border-top border-5 rounded">
                         @if (product.ImageUrl != null)
                         {
                             <img src="@product.ImageUrl" class="card-img-top rounded" />
@@ -38,12 +38,21 @@
                                 </p>
                             </div>
                         </div>
-                        <div>
+                        <div class="card-footer text-center">
                             <a asp-action="Detail"
                                asp-route-productId="@product.Id"
                                class="btn btn-primary bg-gradient border-0 form-control">
                                 Details
                             </a>
+
+                            <form asp-area="Customer" asp-action="AddToCart" asp-controller="Cart" method="post" class="mt-2">
+                                <input type="hidden" name="productId" value="@product.Id" />
+                                <input type="hidden" name="productName" value="@product.Title" />
+                                <input type="hidden" name="price" value="@product.Price100" />
+                                <button type="submit" class="btn btn-success bg-gradient border-0 form-control">
+                                    Add to Cart
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>

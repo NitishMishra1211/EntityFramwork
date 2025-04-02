@@ -19,6 +19,12 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.Sign
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();  // Ensure token providers are added for features like email confirmation
 
+// Add authorization policies
+builder.Services.ConfigureApplicationCookie(options => {
+    options.LoginPath = $"/Identity/Account/Login";
+    options.LogoutPath = $"/Identity/Account/Logout";
+    options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+});
 // Add MVC services
 builder.Services.AddControllersWithViews();
 
@@ -51,6 +57,7 @@ app.UseStaticFiles();
 app.UseSession();  // Enable session middleware
 app.UseRouting();
 
+app.UseAuthentication();
 // Ensure that authorization is used only once
 app.UseAuthorization();
 

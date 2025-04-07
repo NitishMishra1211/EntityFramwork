@@ -8,13 +8,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Utility;
-using web.JWT;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-builder.Services.AddHttpClient();  // Add HttpClient factory for making HTTP requests
-builder.Services.AddHttpContextAccessor();
 
 // Add session support
 builder.Services.AddSession();
@@ -37,11 +33,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 // Add your services (like UnitOfWork and CartService)
-builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddSingleton<CartService>();
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // Configure the database context with the connection string
 builder.Services.AddDbContext<ApplicationDbContext>(items =>

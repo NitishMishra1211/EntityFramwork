@@ -4,6 +4,7 @@ using Models;
 
 namespace Controllers
 {
+    [Area("Customer")]
     public class CartController : Controller
     {
         private readonly CartService _cartService;

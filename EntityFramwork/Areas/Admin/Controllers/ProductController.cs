@@ -5,6 +5,7 @@ using Models;
 
 namespace EntityFramwork.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class ProductController : Controller
     {
         private IUnitOfWork _unitOfWork { get; }

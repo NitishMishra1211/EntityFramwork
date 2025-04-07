@@ -7,6 +7,7 @@ using DataAccess.Data;
 
 namespace EntityFramwork.Areas.Admin.Controllers;
 
+[Area("Admin")]
 public class StudentController : Controller
 {
     //private readonly ILogger<HomeController> _logger;

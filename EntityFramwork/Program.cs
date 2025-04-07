@@ -8,8 +8,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Utility;
+using web.JWT;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddHttpClient();  // Add HttpClient factory for making HTTP requests
+builder.Services.AddHttpContextAccessor();
 
 // Add session support
 builder.Services.AddSession();
@@ -32,6 +37,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 // Add your services (like UnitOfWork and CartService)
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddSingleton<CartService>();
@@ -63,8 +69,17 @@ app.UseAuthorization();
 
 // Map Razor Pages and MVC routes
 app.MapRazorPages();  // This maps Razor Pages routes
+
+
+
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area=exists}/{controller=Category}/{action=Index}/{id?}");
+
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");  // MVC route for controllers and actions
+
 
 app.Run();

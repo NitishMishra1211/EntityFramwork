@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Models;
 
-namespace EntityFramwork.Controllers
+namespace web.Controllers
 {
     public class HomeController : Controller
     {

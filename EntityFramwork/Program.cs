@@ -67,13 +67,13 @@ app.MapRazorPages();  // This maps Razor Pages routes
 
 
 app.MapControllerRoute(
-    name: "areas",
-    pattern: "{area=exists}/{controller=Category}/{action=Index}/{id?}");
-
-
-app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");  // MVC route for controllers and actions
+    pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
+
+
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=Home}/{action=Index}/{id?}");  // MVC route for controllers and actions
 
 
 app.Run();

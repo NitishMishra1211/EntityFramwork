@@ -2,8 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Models;
 
-namespace web.Controllers
+namespace web.Areas.Customer.Controllers
 {
+    [Area("Customer")]
     public class HomeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

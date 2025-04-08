@@ -6,6 +6,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using DataAccess.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -16,11 +17,17 @@ namespace EntityFramwork.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public IndexModel(
+            IWebHostEnvironment webHostEnvironment,
+            ApplicationDbContext context,
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager)
         {
+            _webHostEnvironment = webHostEnvironment;
+            _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
         }
@@ -30,6 +37,8 @@ namespace EntityFramwork.Areas.Identity.Pages.Account.Manage
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public string Username { get; set; }
+
+        public string ProfileImagePath { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -80,7 +89,11 @@ namespace EntityFramwork.Areas.Identity.Pages.Account.Manage
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
-
+            //var userProfile = _context.userProfiles.FirstOrDefault(up = > up.UserId == user.Id);
+            var userProfile = _context.userProfiles.FirstOrDefault(up => up.UserId == user.Id);
+            ProfileImagePath = userProfile.ProfileImagePath;
+            //ViewBag.ProfileImagePath = userProfile.ProfileImagePath; ;
+            ViewData["path"] = userProfile.ProfileImagePath;
             await LoadAsync(user);
             return Page();
         }

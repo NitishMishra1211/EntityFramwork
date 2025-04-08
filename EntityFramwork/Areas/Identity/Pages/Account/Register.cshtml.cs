@@ -10,8 +10,10 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using DataAccess.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -20,12 +22,14 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Models;
 using Utility;
 
 namespace EntityFramwork.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
+        private IWebHostEnvironment _webHostEnvironment;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -33,8 +37,11 @@ namespace EntityFramwork.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly ApplicationDbContext _context;
 
         public RegisterModel(
+            IWebHostEnvironment webHostEnvironment,
+        ApplicationDbContext context,
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager,
             IUserStore<IdentityUser> userStore,
@@ -42,6 +49,8 @@ namespace EntityFramwork.Areas.Identity.Pages.Account
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
+            _webHostEnvironment = webHostEnvironment;
+            _context = context;
             _roleManager = roleManager;
             _userManager = userManager;
             _userStore = userStore;
@@ -107,6 +116,9 @@ namespace EntityFramwork.Areas.Identity.Pages.Account
             public string Role { get; set; }
             [ValidateNever]
             public IEnumerable<SelectListItem> Roles { get; set; }
+
+            [BindProperty]
+            public IFormFile ProfileImage { get; set; }
         }
 
 
@@ -152,6 +164,46 @@ namespace EntityFramwork.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
+                    //Handle image upload and save to UserProfile
+                    string webRootPath = _webHostEnvironment.WebRootPath;
+                    string productPath = Path.Combine(webRootPath, "Profileimages", "Profile");
+
+                    if (!Directory.Exists(productPath))
+                    {
+                        Directory.CreateDirectory(productPath);
+                    }
+
+                    if (Input.ProfileImage != null && Input.ProfileImage.Length > 0)
+                    {
+                        string upload = Path.Combine(productPath, Input.ProfileImage.FileName);
+                        using (var fileStream = new FileStream(upload, FileMode.Create))
+                        {
+                            Input.ProfileImage.CopyTo(fileStream);
+                        }
+                       
+                    }
+                    if (Input.ProfileImage != null)
+                    {
+                        var userProfile = new UserProfile()
+                        {
+                            UserId = user.Id,
+                            ProfileImagePath = Path.Combine("Profileimages", "Profile", Input.ProfileImage.FileName),
+                        };
+
+                        _context.userProfiles.Add(userProfile);
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        var userProfile = new UserProfile()
+                        {
+                            UserId = user.Id,
+                            ProfileImagePath = "", // or some default value
+                        };
+
+                        _context.userProfiles.Add(userProfile);
+                        _context.SaveChanges();
+                    }
                     _logger.LogInformation("User created a new account with password.");
 
                     if(!String.IsNullOrEmpty(Input.Role))

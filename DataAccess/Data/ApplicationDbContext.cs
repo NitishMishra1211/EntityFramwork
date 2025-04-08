@@ -16,8 +16,8 @@ namespace DataAccess.Data
 
         }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<UserProfile> userProfiles { get; set; }
         public DbSet<Student> Students { get; set; }
-
         public DbSet<Product> Products { get; set; }
         public DbSet<CartItem> CartItems{ get; set; }
 

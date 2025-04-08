@@ -8,7 +8,7 @@
 <h3>@ViewData["Title"]</h3>
 <partial name="_StatusMessage" for="StatusMessage" />
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-8">
         <form id="profile-form" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
             <div class="form-floating mb-3">
@@ -22,6 +22,20 @@
             </div>
             <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
         </form>
+    </div>
+    <div class="col-md-4">
+        <div class="mb-3">
+            @if (!string.IsNullOrEmpty(Model.ProfileImagePath))
+            {
+                @* <img src=@Model.ProfileImagePath alt="Profile Image" style="width:100px;height:100px;border-radius:50%;object-fit:cover;" /> *@
+                <img src="~/@Model.ProfileImagePath" alt="Profile Image" style="width:400px;height:400px;object-fit:contain;" />
+
+            }
+            else
+            {
+                <p>No profile image uploaded</p>
+            }
+        </div>
     </div>
 </div>
 

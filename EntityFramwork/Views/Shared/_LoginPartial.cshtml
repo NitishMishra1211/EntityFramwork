@@ -1,12 +1,32 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using DataAccess.Data
 
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@inject ApplicationDbContext Context
 
 <ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
-    <li class="nav-item">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        var user = await UserManager.GetUserAsync(User);
+        var userProfile =  Context.userProfiles.FirstOrDefault(up =>up.UserId == user.Id);
+        @if(userProfile !=null && !string.IsNullOrEmpty(userProfile.ProfileImagePath))
+        {
+           <li> 
+               <a asp-area="Identity" asp-page="/Account/Manage/Index">
+               @* <img src="@Url.Content(userProfile.ProfileImagePath)" alt="Profile" style="width:30px; height:30px; border-radius:50%;margin-right:5px;"/> *@
+                    <img src="~/@userProfile.ProfileImagePath" alt="Profile" style="width:60px; height:60px; border-radius:50%; margin-right:5px;" />
+
+               </a>
+            
+            </li>
+        }
+        else
+        {
+            <span class="text-light" style="margin-right:5px;"> icon</span>
+        }
+
+        <li class="nav-item">
         <a id="manage" class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
     </li>
     <li class="nav-item">

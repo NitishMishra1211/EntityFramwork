@@ -1,0 +1,13 @@
+﻿@inject DataAccess.Repository.CartService CartService
+
+@{
+    var cartItems = CartService.GetCartItems();
+    var itemCount = cartItems.Sum(item => item.Quantity);
+    var total = CartService.GetTotal();
+}
+
+<li class="nav-item">
+    <a class="nav-link text-white" asp-area="Customer" asp-controller="Cart" asp-action="Index">
+        Cart (@itemCount) - @total.ToString("c")
+    </a>
+</li>

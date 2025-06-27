@@ -49,29 +49,28 @@ namespace EntityFramwork.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult UpSert(Product obj, IFormFile? file)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                string webRootPath = _webHostEnvironment.WebRootPath + Path.GetExtension(file.FileName);
-
-                string productPath = Path.Combine(webRootPath, @"images\product");
+                string webRootPath = _webHostEnvironment.WebRootPath;
+                string productPath = Path.Combine(webRootPath, "images", "product");
 
                 if (!Directory.Exists(productPath))
                 {
                     Directory.CreateDirectory(productPath);
                 }
 
-                if (!string.IsNullOrEmpty(obj.ImageUrl))
+                if (file != null && file.Length > 0)
                 {
                     string upload = Path.Combine(productPath, file.FileName);
                     using (var fileStream = new FileStream(upload, FileMode.Create))
                     {
                         file.CopyTo(fileStream);
                     }
-                    obj.ImageUrl = @"\images\product\" + file.FileName;
+                    obj.ImageUrl = Path.Combine("images", "product", file.FileName);
                 }
                 else
                 {
-                    obj.ImageUrl = @"\images\product\default.png";
+                    obj.ImageUrl = Path.Combine("images", "product", "default.png");
                 }
 
                 if (obj.Id == 0)
@@ -89,5 +88,6 @@ namespace EntityFramwork.Areas.Admin.Controllers
             }
             return View(obj);
         }
+
     }
 }

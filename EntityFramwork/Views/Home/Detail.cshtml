@@ -1,0 +1,88 @@
+﻿@model Models.Product
+
+<form method="post">
+    <input hidden asp-for="Id" />
+    <div class="card shadow border-0 mt-4 mb-4">
+        <div class="card-header bg-secondary bg-gradient text-light py-4">
+            <div class="row">
+                <div class="col-12 text-center">
+                    @if (Model != null)
+                    {
+                        <h3 class="text-white text-uppercase">@Model.Title</h3>
+                        <p class="text-white-50 fw-semibold mb-0">by @Model.Author</p>
+                    }
+                    else
+                    {
+                        <h3 class="text-white">Product not found</h3>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="py-3">
+                <div class="row">
+                    <div class="col-6 col-md-2 offset-lg-1 pb-1">
+                        <a asp-area="Home" asp-controller="Home" asp-action="Index" class="btn btn-outline-primary bg-gradient mb-5 fw-semibold btn-sm text-uppercase">
+                            <small>Back to home</small>
+                        </a>
+                    </div>
+                </div>
+                @if (Model != null)
+                {
+                    <div class="row">
+                        <div class="col-12 col-lg-6 offset-lg-1">
+                            <div class="col-12 col-md-6 pb-4">
+                                <span class="badge">@Model?.Category?.Name ?? "No Category"</span>
+                            </div>
+                            <div class="row ps-2">
+                                <h6 class="text-dark text-opacity-50 ">ISBN : @Model.ISBN</h6>
+                            </div>
+                            <div class="row ps-2">
+                                <h6 class="text-dark text-opacity-50 pb-2">
+                                    List Price:
+                                    <span class="text-decoration-line-through">
+                                        @Model.ListPrice.ToString("c")
+                                    </span>
+                                </h6>
+                            </div>
+                            <div class="row ps-2">
+                                <h6 class="text-dark text-opacity-50 pb-2">
+                                    Price:
+                                    <span>
+                                        @Model.Price.ToString("c")
+                                    </span>
+                                </h6>
+                            </div>
+                            <div class="row ps-2">
+                                <h6 class="text-dark text-opacity-50 pb-2">
+                                    Description:
+                                    <span>
+                                        @Model.Description
+                                    </span>
+                                </h6>
+                            </div>
+                            <div class="row ps-2">
+                                <h6 class="text-dark text-opacity-50 pb-2">
+                                    Image:
+                                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                                    {
+                                        <img src="@Url.Content("~/"+Model.ImageUrl)" class="img-fluid" alt="@Model.Title" />
+                                    }
+                                    else
+                                    {
+                                        <img src="https://placehold.co/500x600/png" class="img-fluid" alt="Placeholder" />
+                                    }
+                                </h6>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-danger">Product not found</div>
+                }
+            </div>
+        </div>
+    </div>
+</form>
